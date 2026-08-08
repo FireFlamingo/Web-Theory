@@ -1,0 +1,327 @@
+/* Electricity Bill Calculator — shared styles for index.html and the servlet output */
+
+:root {
+  --paper:   #E9ECE6;
+  --card:    #F6F8F4;
+  --ink:     #16211C;
+  --muted:   #5E6B62;
+  --line:    #CBD2C6;
+  --lcd:     #B7C6A6;
+  --lcd-ink: #1E2A18;
+  --copper:  #C64B2A;
+
+  /* slab scale: cool -> hot as the rate climbs */
+  --s1: #2F6B6B;
+  --s2: #6A8C4F;
+  --s3: #B58B2E;
+  --s4: #C64B2A;
+
+  --pad: clamp(1.1rem, 4vw, 2.4rem);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: clamp(1rem, 4vw, 3rem) 1rem clamp(3rem, 8vw, 5rem);
+  background: var(--paper);
+  background-image: repeating-linear-gradient(
+      to bottom, transparent 0 31px, rgba(22,33,28,.045) 31px 32px);
+  color: var(--ink);
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.sheet {
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+/* ---------- masthead ---------- */
+
+.eyebrow {
+  margin: 0 0 .6rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 0 0 clamp(1.4rem, 4vw, 2.2rem);
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.1rem, 8vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -.03em;
+}
+
+h1 .thin { font-weight: 500; color: var(--muted); }
+
+/* ---------- meter / form ---------- */
+
+.meter {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: var(--pad);
+  box-shadow: 0 1px 0 rgba(22,33,28,.06);
+}
+
+.meter__label {
+  display: block;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .74rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .7rem;
+}
+
+.lcd {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  background: var(--lcd);
+  border: 1px solid #94A585;
+  border-radius: 3px;
+  padding: .55rem clamp(.7rem, 3vw, 1.1rem);
+  box-shadow: inset 0 2px 6px rgba(30,42,24,.22);
+}
+
+.lcd__input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline-offset: 4px;
+  color: var(--lcd-ink);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 12vw, 3.6rem);
+  letter-spacing: .04em;
+  text-align: right;
+  padding: 0;
+}
+
+.lcd__input::placeholder { color: rgba(30,42,24,.28); }
+
+/* strip the spinner so the readout stays clean */
+.lcd__input::-webkit-outer-spin-button,
+.lcd__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.lcd__input { -moz-appearance: textfield; appearance: textfield; }
+
+.lcd__unit {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .95rem;
+  color: rgba(30,42,24,.65);
+}
+
+.hint {
+  margin: .7rem 0 1.3rem;
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+.calc {
+  width: 100%;
+  border: 0;
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--card);
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .01em;
+  padding: .95rem 1rem;
+  cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.calc:hover { background: var(--copper); }
+.calc:active { transform: translateY(1px); }
+.calc:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+
+/* ---------- tariff list ---------- */
+
+.tariff { margin-top: clamp(1.6rem, 5vw, 2.4rem); }
+
+.tariff__title {
+  margin: 0 0 .9rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: .74rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tariff__list { list-style: none; margin: 0; padding: 0; }
+
+.slab {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: .85rem;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.slab__chip {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--slab);
+}
+
+.slab__range { font-size: .95rem; }
+.slab__range em { color: var(--muted); font-style: normal; font-size: .85em; }
+
+.slab__rate {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+.tariff__note {
+  margin: 1rem 0 0;
+  font-size: .85rem;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+/* ---------- result page ---------- */
+
+.total {
+  background: var(--ink);
+  color: var(--card);
+  border-radius: 4px;
+  padding: var(--pad);
+}
+
+.total__label {
+  margin: 0 0 .4rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(246,248,244,.6);
+}
+
+.total__amount {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 11vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+
+.total__sub {
+  margin: .8rem 0 0;
+  font-size: .9rem;
+  color: rgba(246,248,244,.7);
+}
+
+/* stacked bar showing how the units filled each slab */
+.stack {
+  display: flex;
+  height: 14px;
+  margin: clamp(1.4rem, 4vw, 2rem) 0 1rem;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.stack__seg { height: 100%; }
+
+.breakdown {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .95rem;
+}
+
+.breakdown th {
+  text-align: left;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-weight: 600;
+  font-size: .7rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 0 .6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.breakdown td {
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.breakdown .num {
+  text-align: right;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.breakdown .name {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.breakdown .dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--slab);
+}
+
+.breakdown tr.unused { color: var(--muted); }
+.breakdown tr.unused .dot { opacity: .25; }
+
+.breakdown tfoot td {
+  border-bottom: 0;
+  padding-top: 1rem;
+  font-weight: 600;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 1.8rem;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 2px solid var(--copper);
+  padding-bottom: 2px;
+}
+
+.back:hover { color: var(--copper); }
+
+.error {
+  background: var(--card);
+  border: 1px solid var(--copper);
+  border-left: 4px solid var(--copper);
+  border-radius: 3px;
+  padding: 1rem 1.1rem;
+}
+
+.error p { margin: 0; }
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 460px) {
+  .breakdown th:nth-child(2),
+  .breakdown td:nth-child(2) { display: none; }  /* hide the rate column */
+
+  .slab { grid-template-columns: 10px 1fr auto; gap: .6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
