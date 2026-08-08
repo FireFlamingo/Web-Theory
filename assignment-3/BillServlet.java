@@ -31,7 +31,7 @@ public class BillServlet extends HttpServlet {
     private static final String[] SLAB_NAME = {
         "First 50 units", "Next 100 units", "Next 100 units", "Above 250 units"
     };
-    private static final String[] SLAB_COLOR = {"#2F6B6B", "#6A8C4F", "#B58B2E", "#C64B2A"};
+    private static final String[] SLAB_COLOR = {"#2563EB", "#7C3AED", "#D97706", "#DC2626"};
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
