@@ -1,0 +1,89 @@
+<%--
+    tariff.jspf — slab tariff data and bill maths.
+
+    Pulled into index.jsp and bill.jsp with the static include directive
+    <%@ include file="WEB-INF/tariff.jspf" %> so both pages read the rates,
+    labels and colours from exactly one place. Editing a rate here changes
+    the tariff card, the JavaScript preview and the server-side bill at once.
+--%>
+<%!
+    /* Units each slab can absorb. The last slab is unbounded. */
+    static final int[]    SLAB_SIZE  = { 50, 100, 100, Integer.MAX_VALUE };
+    static final double[] SLAB_RATE  = { 3.50, 4.00, 5.20, 6.50 };
+    static final String[] SLAB_NAME  = { "First 50 units", "Next 100 units",
+                                         "Next 100 units", "Above 250 units" };
+    static final String[] SLAB_RANGE = { "1 &ndash; 50", "51 &ndash; 150",
+                                         "151 &ndash; 250", "251 and above" };
+    static final String[] SLAB_COLOR = { "#2563EB", "#7C3AED", "#D97706", "#DC2626" };
+
+    static final int    MAX_UNITS = 100000;
+    static final String RUPEE     = "\u20B9";
+
+    /**
+     * Spreads `units` across the slabs, cheapest first.
+     * Fills unitsOut[] / amountOut[] and returns the total payable.
+     */
+    double splitBill(int units, int[] unitsOut, double[] amountOut) {
+        double total = 0.0;
+        int remaining = units;
+        for (int i = 0; i < SLAB_SIZE.length; i++) {
+            int used = Math.min(Math.max(remaining, 0), SLAB_SIZE[i]);
+            unitsOut[i]  = used;
+            amountOut[i] = used * SLAB_RATE[i];
+            total       += amountOut[i];
+            remaining   -= used;
+        }
+        return total;
+    }
+
+    /** Money with a thousands separator and two decimals: 1,234.50 */
+    String money(double value) {
+        return String.format("%,.2f", value);
+    }
+
+    /** Escapes anything that came from the request before it is printed. */
+    String esc(String raw) {
+        if (raw == null) return "";
+        StringBuilder out = new StringBuilder(raw.length() + 16);
+        for (int i = 0; i < raw.length(); i++) {
+            char c = raw.charAt(i);
+            switch (c) {
+                case '&':  out.append("&amp;");  break;
+                case '<':  out.append("&lt;");   break;
+                case '>':  out.append("&gt;");   break;
+                case '"':  out.append("&quot;"); break;
+                case '\'': out.append("&#39;");  break;
+                default:   out.append(c);
+            }
+        }
+        return out.toString();
+    }
+
+    /** The same slab table as JSON, so the live preview never drifts from the server. */
+    String tariffJson() {
+        StringBuilder json = new StringBuilder("[");
+        for (int i = 0; i < SLAB_SIZE.length; i++) {
+            if (i > 0) json.append(',');
+            json.append("{\"size\":").append(SLAB_SIZE[i] == Integer.MAX_VALUE ? "null" : SLAB_SIZE[i])
+                .append(",\"rate\":").append(SLAB_RATE[i])
+                .append(",\"color\":\"").append(SLAB_COLOR[i]).append("\"}");
+        }
+        return json.append(']').toString();
+    }
+
+    /**
+     * Reads the "units" parameter. Returns the value, or -1 when it is
+     * missing, not a whole number, negative, or beyond the meter's range.
+     */
+    int readUnits(String raw) {
+        if (raw == null) return -1;
+        raw = raw.trim().replace(",", "");
+        if (raw.isEmpty()) return -1;
+        try {
+            int units = Integer.parseInt(raw);
+            return (units < 0 || units > MAX_UNITS) ? -1 : units;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+%>
