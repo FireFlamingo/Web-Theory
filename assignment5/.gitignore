@@ -1,0 +1,19 @@
+# Maven / Backend
+backend/target/
+target/
+*.class
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+
+# Embedded tools / temporary
+apache-maven-3.9.6/
+
+# IDE / System
+.idea/
+.vscode/
+*.swp
+*.DS_Store

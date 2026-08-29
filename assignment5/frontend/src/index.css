@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/*
+  VIT Result System — Warm Beige / Cognac Design Tokens
+  Rich, understated palette: warm creams, dark espresso text, cognac accents
+*/
+
+:root {
+  /* Core Palette */
+  --text: #8a7e72;
+  --text-h: #2c2014;
+  --bg: #faf8f5;
+  --bg-card: #ffffff;
+  --bg-subtle: #f5f1ec;
+  --border: #e6dfd6;
+  --border-hover: #d4cabb;
+
+  /* Accent — Rich Cognac / Warm Amber */
+  --accent: #9c6b30;
+  --accent-hover: #845a27;
+  --accent-muted: #b8945e;
+  --accent-bg: rgba(156, 107, 48, 0.07);
+  --accent-border: rgba(156, 107, 48, 0.3);
+
+  /* Surfaces */
+  --code-bg: #f0ebe3;
+  --social-bg: rgba(240, 235, 227, 0.6);
+  --shadow: rgba(44, 32, 20, 0.06) 0 10px 15px -3px, rgba(44, 32, 20, 0.03) 0 4px 6px -2px;
+  --shadow-lg: rgba(156, 107, 48, 0.12) 0 20px 25px -5px, rgba(44, 32, 20, 0.04) 0 8px 10px -6px;
+
+  /* Semantic */
+  --success: #5a7c52;
+  --success-bg: #f0f5ee;
+  --success-border: #c8dac2;
+  --danger: #a64a3c;
+  --danger-bg: #faf0ee;
+  --danger-border: #e5c5bf;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-h);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: var(--bg-subtle); }
+::-webkit-scrollbar-thumb { background: #cec4b5; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-muted); }
+
+/* Cards */
+.card-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-panel-hover:hover {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Hide scrollbar for tab bar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Print */
+@media print {
+  body { background-color: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  .printable-area {
+    display: block !important;
+    position: absolute; left: 0; top: 0; width: 100%;
+    margin: 0; padding: 24px;
+    background: #fff !important; color: #000 !important;
+    border: none !important; box-shadow: none !important;
+  }
+  .printable-area * { color: #000 !important; border-color: #cbd5e1 !important; }
+}
