@@ -1,0 +1,57 @@
+<%--
+    tariff.jspf — slab tariff data and bill maths.
+
+    Pulled into index.jsp and bill.jsp with the static include directive so both
+    pages read the rates, labels and colours from one place. Editing a rate here
+    updates the tariff card and the bill at once.
+--%>
+<%!
+    /* Units each slab can absorb. The last slab is unbounded. */
+    static final int[]    SLAB_SIZE  = { 50, 100, 100, Integer.MAX_VALUE };
+    static final double[] SLAB_RATE  = { 3.50, 4.00, 5.20, 6.50 };
+    static final String[] SLAB_NAME  = { "First 50 units", "Next 100 units",
+                                         "Next 100 units", "Above 250 units" };
+    /* Shown after the slab name on the tariff card; blank where it adds nothing. */
+    static final String[] SLAB_RANGE = { "", "(51&ndash;150)", "(151&ndash;250)", "" };
+    static final String[] SLAB_COLOR = { "var(--s1)", "var(--s2)", "var(--s3)", "var(--s4)" };
+
+    static final int MAX_UNITS = 100000;
+
+    /**
+     * Spreads `units` across the slabs, cheapest first.
+     * Fills unitsOut[] / amountOut[] and returns the total payable.
+     */
+    double splitBill(int units, int[] unitsOut, double[] amountOut) {
+        double total = 0.0;
+        int remaining = units;
+        for (int i = 0; i < SLAB_SIZE.length; i++) {
+            int used = Math.min(Math.max(remaining, 0), SLAB_SIZE[i]);
+            unitsOut[i]  = used;
+            amountOut[i] = used * SLAB_RATE[i];
+            total       += amountOut[i];
+            remaining   -= used;
+        }
+        return total;
+    }
+
+    /** Two decimals, the same format the assignment 3 servlet printed. */
+    String money(double value) {
+        return String.format("%.2f", value);
+    }
+
+    /**
+     * Reads the "units" parameter. Returns the value, or -1 when it is
+     * not a whole number, negative, or beyond the meter's range.
+     */
+    int readUnits(String raw) {
+        if (raw == null) return -1;
+        raw = raw.trim();
+        if (raw.isEmpty()) return -1;
+        try {
+            int units = Integer.parseInt(raw);
+            return (units < 0 || units > MAX_UNITS) ? -1 : units;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+%>
