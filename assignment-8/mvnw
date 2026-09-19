@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+BASE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+MAVEN_HOME="$BASE_DIR/.mvn/wrapper/apache-maven-3.9.9"
+ZIP="$BASE_DIR/.mvn/wrapper/apache-maven-3.9.9-bin.zip"
+if [ ! -x "$MAVEN_HOME/bin/mvn" ]; then
+  echo "Maven is not installed; downloading Apache Maven 3.9.9..."
+  mkdir -p "$BASE_DIR/.mvn/wrapper"
+  if command -v curl >/dev/null 2>&1; then curl -fsSL "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip" -o "$ZIP"; else wget -q "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip" -O "$ZIP"; fi
+  (cd "$BASE_DIR/.mvn/wrapper" && unzip -q -o "$ZIP")
+fi
+exec "$MAVEN_HOME/bin/mvn" "$@"

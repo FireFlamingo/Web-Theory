@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b18">
+  <title>CricPulse — Live Cricket Scores</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="CricPulse home">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span>Cric<span>Pulse</span></span>
+      </a>
+      <nav class="topnav" aria-label="Main navigation">
+        <button class="nav-item active" data-filter="ALL">All matches</button>
+        <button class="nav-item" data-filter="LIVE">Live</button>
+        <button class="nav-item" data-filter="SCHEDULED">Upcoming</button>
+        <button class="nav-item" data-filter="COMPLETED">Results</button>
+      </nav>
+      <button class="create-button" id="open-create"><span>+</span> New match</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow"><span></span> Live match centre</p>
+          <h1>Every ball. <em>As it happens.</em></h1>
+          <p class="hero-copy">Live scores, ball-by-ball action and player performance in one match-day command centre.</p>
+        </div>
+        <div class="connection-pill" id="connection"><i></i><span>Connecting</span></div>
+      </section>
+
+      <section class="match-strip" aria-label="Matches">
+        <div class="section-heading">
+          <div><p class="kicker">Match centre</p><h2 id="match-list-title">All fixtures</h2></div>
+          <span id="match-count">Loading…</span>
+        </div>
+        <div class="match-list" id="match-list">
+          <div class="match-card skeleton"></div><div class="match-card skeleton"></div>
+        </div>
+      </section>
+
+      <section class="dashboard" id="dashboard" aria-live="polite">
+        <div class="empty-state"><div class="loader"></div><p>Loading the match centre…</p></div>
+      </section>
+    </main>
+
+    <footer><span>CRICPULSE MATCH SYSTEM</span><span>REST API · SSE LIVE FEED · SPRING BOOT</span></footer>
+  </div>
+
+  <dialog id="create-dialog">
+    <form id="create-form">
+      <div class="dialog-head"><div><p class="kicker">Match administration</p><h2>Create a fixture</h2></div><button type="button" class="icon-button" id="close-create" aria-label="Close">×</button></div>
+      <label>Match title<input name="title" required placeholder="India vs Australia"></label>
+      <div class="form-row"><label>Team A<select name="teamAId" required></select></label><label>Team B<select name="teamBId" required></select></label></div>
+      <div class="form-row"><label>Format<select name="format"><option>T20</option><option>ODI</option><option>TEST</option></select></label><label>Overs<input name="maxOvers" type="number" min="1" max="50" value="20" required></label></div>
+      <label>Venue<input name="venue" required placeholder="Stadium, City"></label>
+      <label>Start time<input name="scheduledAt" type="datetime-local" required></label>
+      <p class="form-error" id="form-error"></p>
+      <button class="primary-button" type="submit">Create match</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
